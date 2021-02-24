@@ -1,4 +1,6 @@
-# MongoDB Associations
+# MongoDB Associations and Relationships
+
+![](http://milewalk.com/wp-content/uploads/2015/09/How-to-build-the-most-enjoyable-relationships.jpg)
 
 ## Overview
 
@@ -424,8 +426,6 @@ You can also test that your data and relationships are good by writing a simple 
 const db = require('./db')
 const { User, Task } = require('./models')
 
-db.on('error', console.error.bind(console, 'MongoDB connection error:'))
-
 const findAllUsers = async () => {
   const users = await User.find()
   console.log('All users:', users)
@@ -437,15 +437,22 @@ const findAllTasks = async () => {
 }
 
 const findOneWithTasks = async () => {
-  const user1 = await User.findOne({ first_name: 'Jacynthe' })
-  console.log(user1)
+  const user1 = await User.findOne()
+  // Try to use the populate method here to load all of the tasks for a user
+  // https://mongoosejs.com/docs/populate.html
+  console.log(JSON.stringify(user1), null, 2)
 }
 
 const run = async () => {
-  await findAllUsers()
-  // await findAllTasks()
-  // await findOneWithTasks()
-  db.close()
+  try {
+    //   await findAllUsers()
+    // await findAllTasks()
+    // await findOneWithTasks()
+  } catch (error) {
+    console.log(error)
+  } finally {
+    process.exit()
+  }
 }
 
 run()
