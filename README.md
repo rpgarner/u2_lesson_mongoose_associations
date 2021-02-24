@@ -452,7 +452,3 @@ run()
 ```
 
 🎉 Congrats! We went on a journey of different ways we can create relationships in MongoDB. This knowledge will slowly settle in, the more your work with MongoDB. For now, just be aware that there are two ways to create relationships: **embedding** and **referencing**. And there are tradeoffs to both. Feel free to come back to this lesson, study it, review it, and work with it. This knowledge takes a while to solidify.
-
-## Feedback
-
-> [Take a minute to give us feedback on this lesson so we can improve it!](https://forms.gle/vgUoXbzxPWf4oPCX6)
