@@ -195,7 +195,7 @@ This is a common way to model one-to-many relationships where we know we plan on
 
 ## Referencing Documents Example 3
 
-> https://docs.mongodb.com/manual/tutorial/model-referenced-one-to-many-relationships-between-documents/
+_**[One To Many Referenced](https://docs.mongodb.com/manual/tutorial/model-referenced-one-to-many-relationships-between-documents)**_
 
 Let's consider one more way of modeling a relationship:
 
@@ -237,7 +237,7 @@ This is not efficient if we plan on requesting all users and their associated ta
 
 ## Exercise
 
-Let's implement [Exhibit #2B](#referencing-documents-exhibit-2b). We have the concept tasks and users. Tasks belong to users via **referencing**. How would we create that via code?! Let's start:
+Let's implement document references. We have the concept tasks and users. Tasks belong to users via **referencing**. How would we create that via code?! Let's start:
 
 ```sh
 cd mongodb-mongoose-relationships
