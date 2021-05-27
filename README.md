@@ -449,5 +449,11 @@ const run = async () => {
 
 run()
 ```
+## Recap
 
 🎉 Congrats! We went on a journey of different ways we can create relationships in MongoDB. This knowledge will slowly settle in, the more your work with MongoDB. For now, just be aware that there are two ways to create relationships: **embedding** and **referencing**. And there are tradeoffs to both. Feel free to come back to this lesson, study it, review it, and work with it. This knowledge takes a while to solidify.
+
+## Resources
+
+- [MongoDB Associations](https://docs.mongodb.com/mongoid/current/tutorials/mongoid-relations/)
+- [Mongoose Populate](https://medium.com/@nicknauert/mongooses-model-populate-b844ae6d1ee7)
