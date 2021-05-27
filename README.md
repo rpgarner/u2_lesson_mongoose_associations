@@ -351,12 +351,7 @@ Ok. Let's populate our database with data so we can query against it and make su
 
 ### Seed your database
 
-**Bonus**: Try to create a script to seed users and tasks in our database.
-
-<details><summary>Here is a solution.</summary>
-<p>
-   
-There are many ways we could create a seed script for users and tasks. Study the code below, and reason about the code.
+Let's now create a seed file to create some data for our database:
 
 mongodb-mongoose-relationships/seed/tasksUsers.js
 
@@ -405,9 +400,6 @@ const run = async () => {
 run()
 ```
 
-</p>
-</details>
-
 ##
 
 Once you've written a script to seed data test it out:
@@ -451,7 +443,7 @@ const run = async () => {
   } catch (error) {
     console.log(error)
   } finally {
-    process.exit()
+    await db.close()
   }
 }
 
