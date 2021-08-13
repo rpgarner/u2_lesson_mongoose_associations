@@ -200,7 +200,6 @@ This is a common way to model one-to-many relationships where we know we plan on
 Let's implement document references. We have the concept tasks and users. Tasks belong to users via **referencing**. How would we create that via code?! Let's start:
 
 ```sh
-cd mongodb-mongoose-relationships
 npm init -y
 npm install mongoose
 npm install --dev faker
@@ -224,7 +223,7 @@ code .
 
 Inside our `db` folder we are going to use Mongoose to establish a connection to our MongoDB `tasksDatabase`:
 
-`mongodb-mongoose-relationships/db/index.js`
+`db/index.js`
 
 ```js
 const mongoose = require('mongoose')
@@ -250,7 +249,7 @@ module.exports = db
 
 Let's create our task schema:
 
-`mongodb-mongoose-relationships/models/task.js`
+`models/task.js`
 
 ```js
 const { Schema } = require('mongoose')
@@ -268,7 +267,7 @@ module.exports = Task
 
 Now we can create our user schema:
 
-`mongodb-mongoose-relationships/models/user.js`
+`models/user.js`
 
 ```js
 const { Schema } = require('mongoose')
@@ -289,7 +288,7 @@ module.exports = User
 
 We'll now set up our models:
 
-`mongodb-mongoose-relationships/models/index.js`
+`models/index.js`
 
 ```js
 const { model } = require('mongoose')
@@ -313,7 +312,7 @@ Ok. Let's populate our database with data so we can query against it and make su
 
 Let's now create a seed file to create some data for our database:
 
-mongodb-mongoose-relationships/seed/tasksUsers.js
+`seed/tasksUsers.js`
 
 ```js
 const db = require('../db')
@@ -372,7 +371,7 @@ You should now be able to open up [MongoDB Compass](https://www.mongodb.com/prod
 
 You can also test that your data and relationships are good by writing a simple query file:
 
-`mongodb-mongoose-relationships/query.js`
+`query.js`
 
 ```js
 const db = require('./db')
