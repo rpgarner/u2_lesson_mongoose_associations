@@ -1,6 +1,6 @@
 # MongoDB Associations and Relationships
 
-![](http://milewalk.com/wp-content/uploads/2015/09/How-to-build-the-most-enjoyable-relationships.jpg)
+![](https://camo.githubusercontent.com/d03d44a0d98cdeb321d57532166b44b34c61a3bc3aa0af33e9b9bae382f9bf5d/68747470733a2f2f7777772e66696c657069636b65722e696f2f6170692f66696c652f4b44515a56383847544961516e36703047616745)
 
 ## Overview
 
@@ -8,8 +8,7 @@ In this lesson we'll learn how to properly associate and establish relationships
 
 ## Getting started
 
-1. Fork
-1. Clone
+- fork and clone
 
 ## What Are Associations/Relationships
 
@@ -42,85 +41,47 @@ There are trade-offs to each. We should understand them and pick what suits our 
 
 Let's consider a few examples!
 
-### Embedding Documents Example 1
+### Embedding Documents
 
-_**[MongoDB One-To-Many Embedded](https://docs.mongodb.com/manual/tutorial/model-embedded-one-to-many-relationships-between-documents)**_
+**[MongoDB One-To-Many Embedded](https://docs.mongodb.com/manual/tutorial/model-embedded-one-to-many-relationships-between-documents)**
 
-Consider the following `user` document with many `address`'s embedded in it:
+#### Example 1
+
+Consider the following `user` document with many `posts`'s embedded in it:
 
 ```js
 {
    _id: ObjectId("3e399709171f6188450e43d2"),
    name: "Joe Schmoe",
-   address: [
+   handle:"joeBeans123",
+   posts: [
       {
-        street: "123 Fake Street",
-        city: "Faketon",
-        state: "MA",
-        zip: "12345"
+        title: "123 Fake Street",
+        description: "Faketon",
+        likes: 16,
       },
       {
-        street: "1 Some Other Street",
-        city: "Boston",
-        state: "MA",
-        zip: "12345"
+        title: "1 Some Other Street",
+        description: "Boston",
+        likes: 32,
       }
    ]
 }
 ```
 
-Embedding related documents is quite common in MongoDB - it's powerful.
+As you can see, we can embed content into an existing `document`. This is pretty common in MongoDB.
 
-This approach is excellent when we plan on creating queries to fetch the user and the user's related addresses.
+- **Cons**
+  - As the user creates more posts, the array grows. This can lead to increased query latency due to scanning the documents within a collection.
+  - A user might accidently create a duplicate entry leaving your front end with duplicate posts.
+  - Deleting specific records may become challenging due to how mongoDB scans collections.
+- **Pros**
+  - simpler queries to find data
+  - the data is returned with the desired record right off the bat
 
-However, this design falls short when we plan on creating queries that only care about the user and not the address because when we request for the user collection, in this data model, we also get back the related addresses.
+#### Example 2
 
-It also falls short if we plan on querying for a list of addresses because the addresses are nested within the users.
-
-On the upside, this approach is excellent when we know the embedded documents will not grow too much e.g. a user has one or maybe a few addresses, but its safe to expect that on average a user will not have too many addresses otherwise it would be better off to place the addresses in a separate collection.
-
-### Referencing Documents Example 1
-
-_**[One To Many Referenced](https://docs.mongodb.com/manual/tutorial/model-referenced-one-to-many-relationships-between-documents)**_
-
-Let's see how we would model the same data by having addresses **reference** a user document:
-
-```js
-{
-   _id: ObjectId("3e399709171f6188450e43d2"),
-   name: "Joe Schmoe"
-}
-
-{
-   _id: ObjectId("9e391709171f6188450e43f4"),
-   user_id: ObjectId("3e399709171f6188450e43d2"),
-   street: "123 Fake Street",
-   city: "Faketon",
-   state: "MA",
-   zip: "12345"
-}
-
-{
-   _id: ObjectId("8s32170987gf6188450y43f2"),
-   user_id: ObjectId("3e399709171f6188450e43d2"),
-   street: "1 Some Other Street",
-   city: "Boston",
-   state: "MA",
-   zip: "12345"
-}
-```
-
-This design is great for when you expect the address documents to grow. In this design we can have as many address documents as we would like without affecting performance on the user collection!
-
-In this design it's also fast to query the user collection because there are no embedded address documents inside the user documents. It's also fast to query the address collection.
-
-However, this design is not the best if we plan on querying users and their related addresses because the relationship exists on the address document - we would have to query all the addresses to find the users' addresses. Where as in the previous model we can lookup one user and we know all their associated addresses.
-
-### Embedding Documents Example 2
-
-_**[MongoDB One-To-Many Embedded](https://docs.mongodb.com/manual/tutorial/model-embedded-one-to-many-relationships-between-documents)**_
-
-Let's take a look at the following `task` document and its associated embedded `user` document:
+Here's another way we can embed documents:
 
 ```js
 {
@@ -150,17 +111,58 @@ Let's take a look at the following `task` document and its associated embedded `
 }
 ```
 
-There is a code smell here: repetition. This is a common problem when we are modeling data. We see that we're duplicating the user document inside the task document. We are associating via an embedded document but the association is a bit inefficient.
+Notice a pattern here. Both of the users are the same. The biggest issue with embedding documents in this way, is that you'll end up creating duplicate records (in this case a user).
 
-There is a better way - using document referencing.
+### Referencing Documents
 
-## Referencing Documents Example 2
+**[One To Many Referenced](https://docs.mongodb.com/manual/tutorial/model-referenced-one-to-many-relationships-between-documents)**
 
-_**[One To Many Referenced](https://docs.mongodb.com/manual/tutorial/model-referenced-one-to-many-relationships-between-documents)**_
+#### Example 1
 
-Using document referencing we model the `user`/`tasks` relationship better:
+Let's see how we would model the same data by having posts **reference** a user document:
 
-`user` document
+`users collection`
+
+```js
+{
+   _id: ObjectId("3e399709171f6188450e43d2"),
+   name: "Joe Schmoe"
+}
+```
+
+`posts collection`
+
+```js
+{
+   _id: ObjectId("9e391709171f6188450e43f4"),
+   user_id: ObjectId("3e399709171f6188450e43d2"),
+   title: "123 Fake Street",
+   description: "Faketon",
+   likes: 16
+}
+
+{
+   _id: ObjectId("8s32170987gf6188450y43f2"),
+   user_id: ObjectId("3e399709171f6188450e43d2"),
+   title: "1 Some Other Street",
+   description: "Boston",
+   likes: 32
+}
+```
+
+Utilizing this design, we have much more control over the records in our database. By using `references`, we create a virtual link between collections to describe what record belongs to who. The `reference` is typically the `_id` of a document due to it being unique and unmodifiable!
+
+- **Cons**
+  - queries to load the associated data are much more complex
+  - managing multiple schemas/collections becomes trickier as you add more references
+- **Pros**
+  - reduces the risk of duplicates due to schema restrictions that we can add
+  - managing the data becomes easier (Deleting and Updating)
+  - the data is organized in a way that latency does not increase (mongoDB performs some magic to make references super fast)
+
+#### Example 2
+
+We can also use `references` within the parent document. We store the records within an array of the child documents `ObjectId`.
 
 ```js
 {
@@ -193,54 +195,11 @@ Using document referencing we model the `user`/`tasks` relationship better:
 
 This is a common way to model one-to-many relationships where we know we plan on creating requests for a user and all their associated tasks. Instead of embedding tasks within the user document, we embed the task id. This is more efficient. Our user document stays small. Its efficient to request all users or a specific user. This model supports a data model where a user can have many tasks because all we're storing is the task id inside the user document - so it doesn't take up much space in the user document. And if we do want the task data we can request it from the tasks collection based on the task id found in the user document.
 
-## Referencing Documents Example 3
-
-_**[One To Many Referenced](https://docs.mongodb.com/manual/tutorial/model-referenced-one-to-many-relationships-between-documents)**_
-
-Let's consider one more way of modeling a relationship:
-
-`user` document
-
-```js
-{
-  _id: ObjectId("4e339749175f6147450e43d1")
-  first_name: "Joe",
-  last_name: "Schmoe",
-  email: "j.schmoe@gmail.com",
-  job_title: "Junior Developer"
-}
-```
-
-`task`s documents
-
-```js
-{
-   _id: ObjectId("2e399709171f6188450e43d2")
-   title: "Learn JavaScript",
-   description: "Take a coding bootcamp on JavaScript",
-   status: "active",
-   user_id: ObjectId("4e339749175f6147450e43d1")
-}
-
-{
-   _id: ObjectId("8e399709171f6588450e43g2")
-   title: "Learn React",
-   description: "Take a coding bootcamp on React",
-   status: "active",
-   user_id: ObjectId("4e339749175f6147450e43d1")
-}
-```
-
-This is a common use case when we know that the associated document may grow quite a bit. This is a good way to model this relationship. We abstract the document that is likely to grow to its own collection and embed the user id that document belongs to. This is efficient because we can easily request all users or a specific user. We can easily request all tasks or a specific task. And we can request all tasks and their associated user document.
-
-This is not efficient if we plan on requesting all users and their associated tasks.
-
 ## Exercise
 
 Let's implement document references. We have the concept tasks and users. Tasks belong to users via **referencing**. How would we create that via code?! Let's start:
 
 ```sh
-cd mongodb-mongoose-relationships
 npm init -y
 npm install mongoose
 npm install --dev faker
@@ -264,7 +223,7 @@ code .
 
 Inside our `db` folder we are going to use Mongoose to establish a connection to our MongoDB `tasksDatabase`:
 
-`mongodb-mongoose-relationships/db/index.js`
+`db/index.js`
 
 ```js
 const mongoose = require('mongoose')
@@ -290,7 +249,7 @@ module.exports = db
 
 Let's create our task schema:
 
-`mongodb-mongoose-relationships/models/task.js`
+`models/task.js`
 
 ```js
 const { Schema } = require('mongoose')
@@ -308,7 +267,7 @@ module.exports = Task
 
 Now we can create our user schema:
 
-`mongodb-mongoose-relationships/models/user.js`
+`models/user.js`
 
 ```js
 const { Schema } = require('mongoose')
@@ -329,7 +288,7 @@ module.exports = User
 
 We'll now set up our models:
 
-`mongodb-mongoose-relationships/models/index.js`
+`models/index.js`
 
 ```js
 const { model } = require('mongoose')
@@ -353,7 +312,7 @@ Ok. Let's populate our database with data so we can query against it and make su
 
 Let's now create a seed file to create some data for our database:
 
-mongodb-mongoose-relationships/seed/tasksUsers.js
+`seed/tasksUsers.js`
 
 ```js
 const db = require('../db')
@@ -412,7 +371,7 @@ You should now be able to open up [MongoDB Compass](https://www.mongodb.com/prod
 
 You can also test that your data and relationships are good by writing a simple query file:
 
-`mongodb-mongoose-relationships/query.js`
+`query.js`
 
 ```js
 const db = require('./db')
@@ -449,9 +408,10 @@ const run = async () => {
 
 run()
 ```
+
 ## Recap
 
-🎉 Congrats! We went on a journey of different ways we can create relationships in MongoDB. This knowledge will slowly settle in, the more your work with MongoDB. For now, just be aware that there are two ways to create relationships: **embedding** and **referencing**. And there are tradeoffs to both. Feel free to come back to this lesson, study it, review it, and work with it. This knowledge takes a while to solidify.
+In this lesson, we covered a few different ways of associating data with mMongoDB. This knowledge will slowly settle in, the more your work with MongoDB. For now, just be aware that there are two ways to create relationships: **embedding** and **referencing**. And there are tradeoffs to both. Feel free to come back to this lesson, study it, review it, and work with it. This knowledge takes a while to solidify.
 
 ## Resources
 
