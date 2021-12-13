@@ -245,6 +245,8 @@ const db = mongoose.connection
 module.exports = db
 ```
 
+UnifiedTopography and URL Parser are ways to make sure that Mongo can connect to the DB even if different versions are used through a project
+
 > Notice `mongoose.set('debug', true)` is commented out. This line of code is super handy if you ever need to debug any mongoDB queries. Feel free to uncomment it and use it.
 
 Let's create our task schema:
