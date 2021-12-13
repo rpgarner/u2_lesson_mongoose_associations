@@ -229,10 +229,7 @@ Inside our `db` folder we are going to use Mongoose to establish a connection to
 const mongoose = require('mongoose')
 
 mongoose
-  .connect('mongodb://127.0.0.1:27017/tasksDatabase', {
-    useUnifiedTopology: true,
-    useNewUrlParser: true
-  })
+  .connect('mongodb://127.0.0.1:27017/tasksDatabase')
   .then(() => {
     console.log('Successfully connected to MongoDB.')
   })
