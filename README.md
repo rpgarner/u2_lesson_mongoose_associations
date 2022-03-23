@@ -315,44 +315,46 @@ Let's now create a seed file to create some data for our database:
 
 ```js
 const db = require('../db')
-const faker = require('faker')
+const Chance = require('chance')
 const { Task, User } = require('../models')
+
+const chance = new Chance()
 
 db.on('error', console.error.bind(console, 'MongoDB connection error:'))
 
 const createTasks = async () => {
-  const tasks = [...Array(400)].map((task) => {
-    return new Task({
-      title: faker.lorem.sentence(),
-      description: faker.lorem.paragraph()
+    const tasks = [...Array(400)].map((task) => {
+        return new Task({
+            title: chance.sentence(),
+            description: chance.paragraph()
+        })
     })
-  })
-  await Task.insertMany(tasks)
-  console.log('Created Tasks!')
-  return tasks
+    await Task.insertMany(tasks)
+    console.log('Created Tasks!')
+    return tasks
 }
 
 const createUsersWithTasks = async (tasks) => {
-  console.log(tasks)
-  let lenOfItems = 100
-  const users = [...Array(lenOfItems)].map((user) => {
-    const selectedTasks = tasks.splice(0, tasks.length / lenOfItems)
-    return {
-      first_name: faker.name.firstName(),
-      last_name: faker.name.lastName(),
-      email: faker.internet.email(),
-      job_title: faker.name.jobTitle(),
-      tasks: selectedTasks.map((task) => task._id)
-    }
-  })
-  await User.insertMany(users)
-  console.log('Created Users!')
+    console.log(tasks)
+    let lenOfItems = 100
+    const users = [...Array(lenOfItems)].map((user) => {
+        const selectedTasks = tasks.splice(0, tasks.length / lenOfItems)
+        return {
+            first_name: chance.first(),
+            last_name: chance.last(),
+            email: chance.email(),
+            job_title: chance.profession(),
+            tasks: selectedTasks.map((task) => task._id)
+        }
+    })
+    await User.insertMany(users)
+    console.log('Created Users!')
 }
 
 const run = async () => {
-  const tasks = await createTasks()
-  await createUsersWithTasks(tasks)
-  db.close()
+    const tasks = await createTasks()
+    await createUsersWithTasks(tasks)
+    db.close()
 }
 
 run()
