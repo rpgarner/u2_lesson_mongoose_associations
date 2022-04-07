@@ -1,0 +1,26 @@
+{
+  "name": "u2_lesson_mongoose_associations",
+  "version": "1.0.0",
+  "description": "![](https://camo.githubusercontent.com/d03d44a0d98cdeb321d57532166b44b34c61a3bc3aa0af33e9b9bae382f9bf5d/68747470733a2f2f7777772e66696c657069636b65722e696f2f6170692f66696c652f4b44515a56383847544961516e36703047616745)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rpgarner/u2_lesson_mongoose_associations.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rpgarner/u2_lesson_mongoose_associations/issues"
+  },
+  "homepage": "https://github.com/rpgarner/u2_lesson_mongoose_associations#readme",
+  "dependencies": {
+    "mongoose": "^6.2.8"
+  },
+  "devDependencies": {
+    "chance": "^1.1.8"
+  }
+}
